@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "container-helpers"
+version = "0.0.1"
+description = "Helpers for running docker or podman containers easily in Python"
+authors = ["Fang-Pen Lin <fangpen@launchplatform.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-asyncio = "^0.21.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
