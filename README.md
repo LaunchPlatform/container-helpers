@@ -111,6 +111,7 @@ async def run():
             raise RuntimeError("Failed")
         # ... 
 
+asyncio.run(run())
 ```
 
 With the context manager, we can easily manipulate the container and make some preparation before running it and tear down after the container is done.
