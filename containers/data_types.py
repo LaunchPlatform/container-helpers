@@ -5,20 +5,6 @@ import typing
 PathType = typing.Union[str, pathlib.Path, pathlib.PurePath]
 
 
-def make_mount(params: typing.Dict[str, str]) -> str:
-    return ",".join(map(lambda item: "=".join(item), params.items()))
-
-
-def make_mount_args(params: typing.Dict[str, str]) -> typing.Tuple[str, str]:
-    return ("--mount", make_mount(params))
-
-
-def make_annotation_args(annotations: typing.Dict[str, str]) -> typing.Tuple[str, ...]:
-    return tuple(
-        map(lambda item: "--annotation=" + "=".join(item), annotations.items())
-    )
-
-
 @dataclasses.dataclass
 class Mount:
     target: PathType
