@@ -24,10 +24,6 @@ jobs:
       - python/install-packages:
           pkg-manager: poetry
       - run:
-          name: config
-          command: |
-            poetry config http-basic.pypi "__token__" "${POETRY_PYPI_TOKEN_PYPI}"
-      - run:
           name: Build
           command: poetry build
       - run:
