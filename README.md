@@ -1,6 +1,12 @@
 # container-helpers
 Helpers for running docker or podman containers easily in Python
 
+## Install
+
+```bash
+pip install container-helpers
+```
+
 ## Usage
 
 Basic data types are provided in the `containers` package.
@@ -205,4 +211,4 @@ We actually provide the `WindowsContainerService` in the package for working aro
  - Automatically make a temp copy of seccomp profile with a WSL UNC path and use the temp copy instead
  - Automatically make a temp copy of a readonly UNC mount path and use the temp copy instead
 
-You can import and use it directly, or use `make_containers_service` to create the container service based on your current operation system.
+You can import and use it directly, or use `make_containers_service` to create the container service based on your current operating system.
