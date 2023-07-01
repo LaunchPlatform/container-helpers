@@ -1,0 +1,12 @@
+version: '3'
+services:
+  test:
+    build: .
+    command:
+    - /bin/sh
+    - "-c"
+    - |
+      python -m pytest -svvv ./tests
+    working_dir: /project
+    volumes:
+    - .:/project
