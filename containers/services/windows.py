@@ -13,7 +13,7 @@ from ..data_types import PathType
 from .base import ContainersService
 
 
-def _to_wsl_path(path: pathlib.Path):
+def to_wsl_path(path: pathlib.Path):
     if not isinstance(path, pathlib.WindowsPath):
         raise ValueError(f"Expected windows path but got {path.__class__} instead")
     new_path = pathlib.Path(path)
@@ -25,7 +25,7 @@ def _to_wsl_path(path: pathlib.Path):
     )
 
 
-def _is_unc_path(path: PathType) -> bool:
+def is_unc_path(path: PathType) -> bool:
     path = pathlib.Path(path)
     return path.drive.startswith("\\")
 
@@ -36,7 +36,7 @@ class WindowsContainersService(ContainersService):
         self, src: typing.Optional[pathlib.Path], suffix: typing.Optional[str] = None
     ) -> typing.AsyncContextManager[pathlib.Path]:
         # Only copy if the drive is provided and a UNC path
-        if src is not None and _is_unc_path(src):
+        if src is not None and is_unc_path(src):
             with (
                 open(src, "rb") as src_file,
                 tempfile.NamedTemporaryFile(suffix=suffix) as temp_file,
@@ -63,7 +63,7 @@ class WindowsContainersService(ContainersService):
             for i, mount in enumerate(mounts):
                 if (
                     not isinstance(mount, BindMount)
-                    or not _is_unc_path(mount.source)
+                    or not is_unc_path(mount.source)
                     or not mount.readonly
                 ):
                     new_mounts.append(mount)
@@ -76,6 +76,7 @@ class WindowsContainersService(ContainersService):
                 mount.source = new_source
                 new_mounts.append(mount)
             yield new_mounts
+
     @contextlib.asynccontextmanager
     async def run(
         self,
@@ -109,7 +110,7 @@ class WindowsContainersService(ContainersService):
                 # need to convert it into WSL path for podman in the podman WSL machine
                 # to read
                 # ref: https://github.com/containers/podman/issues/14494
-                container.security_options.seccomp = _to_wsl_path(temp_seccomp_profile)
+                container.security_options.seccomp = to_wsl_path(temp_seccomp_profile)
             container.mounts = new_mounts
             async with super().run(container, stdin, stdout, stderr, log_level) as proc:
                 yield proc
