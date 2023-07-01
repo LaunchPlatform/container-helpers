@@ -5,18 +5,20 @@ import shlex
 import typing
 
 from containers import Container
+from containers import ContainerProvider
 from containers import Podman
 
 
 class ContainersService:
-    def __init__(self):
-        self.podman = Podman()
+    def __init__(self, provider: typing.Optional[ContainerProvider] = None):
+        self.provider = provider or Podman()
         self.logger = logging.getLogger(__name__)
 
     async def load_image(self, image: str, always_pull: bool = False):
+        # TODO: abstract this to provider instead
         if not always_pull:
             command = (
-                str(self.podman.executable),
+                str(self.provider.executable),
                 "image",
                 "inspect",
                 image,
@@ -32,7 +34,7 @@ class ContainersService:
                 return
             self.logger.debug("Image %s not found, pulling now ...", image)
         command = (
-            str(self.podman.executable),
+            str(self.provider.executable),
             "pull",
             image,
         )
@@ -64,7 +66,7 @@ class ContainersService:
         stderr: typing.Optional[int] = None,
         log_level: typing.Optional[str] = None,
     ) -> typing.AsyncContextManager[asyncio.subprocess.Process]:
-        command = self.podman.build_command(container, log_level=log_level)
+        command = self.provider.build_command(container, log_level=log_level)
         self.logger.info(
             "Run container with command: %s", " ".join(map(shlex.quote, command))
         )
