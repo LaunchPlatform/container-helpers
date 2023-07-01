@@ -62,10 +62,12 @@ class ContainersService:
         stdin: typing.Optional[int] = None,
         stdout: typing.Optional[int] = None,
         stderr: typing.Optional[int] = None,
-        log_level: typing.Optional[str] = "debug",
+        log_level: typing.Optional[str] = None,
     ) -> typing.AsyncContextManager[asyncio.subprocess.Process]:
         command = self.podman.build_command(container, log_level=log_level)
-        self.logger.info("Run container with command: %s", " ".join(map(shlex.quote, command)))
+        self.logger.info(
+            "Run container with command: %s", " ".join(map(shlex.quote, command))
+        )
         proc = await asyncio.create_subprocess_exec(
             *command,
             stdin=stdin,
