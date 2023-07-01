@@ -27,4 +27,7 @@ RUN pip install poetry && \
     poetry config virtualenvs.create false && \
     poetry install --no-interaction --no-ansi
 
+RUN adduser -D containers
+USER containers
+
 ENTRYPOINT ["/init"]

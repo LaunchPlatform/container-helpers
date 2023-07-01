@@ -7,15 +7,14 @@ orbs:
 
 jobs:
   test:
-    docker:
-      - image: cimg/python:3.10.11
+    machine:
+      image: ubuntu-2004:202111-01
+      docker_layer_caching: true
     steps:
       - checkout
-      - python/install-packages:
-          pkg-manager: poetry
       - run:
           name: Run test
-          command: poetry run python -m pytest ./tests -svvvv
+          command: docker-compose run test
   build-and-publish:
     docker:
       - image: cimg/python:3.10.11

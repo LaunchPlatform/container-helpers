@@ -1,12 +1,14 @@
 version: '3'
 services:
   test:
-    build: .
+    image: quay.io/podman/stable
     command:
     - /bin/sh
     - "-c"
     - |
-      python -m pytest -svvv ./tests
+      podman --log-level=debug run -it alpine echo hi
     working_dir: /project
     volumes:
     - .:/project
+    devices:
+      - "/dev/fuse:/dev/fuse"
