@@ -160,7 +160,7 @@ def test_bind_mount_args(
                         source="/var/tmp/artifacts",
                         readonly=False,
                         relabel="private",
-                        bind_propagation="rslave"
+                        bind_propagation="rslave",
                     ),
                 ],
             ),
@@ -170,7 +170,7 @@ def test_bind_mount_args(
                 "--mount",
                 "type=image,source=git-repo-data:write,target=/data,rw=true",
                 "--mount",
-                "type=bind,source=/var/tmp/artifacts,target=/artifacts,chown=true,readonly=false,relabel=private,bind-propagation=rslave",
+                "type=bind,source=/var/tmp/artifacts,target=/artifacts,chown=false,readonly=false,relabel=private,bind-propagation=rslave",
                 "my-image",
                 "git",
                 "log",
