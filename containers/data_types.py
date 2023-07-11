@@ -14,7 +14,7 @@ class Mount:
 class BindMount(Mount):
     source: PathType
     readonly: bool
-    chown: bool = True
+    chown: bool = False
     relabel: typing.Optional[str] = None
     bind_propagation: typing.Optional[str] = None
 
@@ -22,7 +22,7 @@ class BindMount(Mount):
 @dataclasses.dataclass
 class VolumeMount(Mount):
     readonly: bool
-    chown: bool = True
+    chown: bool = False
 
 
 @dataclasses.dataclass
