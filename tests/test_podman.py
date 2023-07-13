@@ -141,6 +141,14 @@ def test_bind_mount_args(
             Container(
                 image="my-image",
                 command=("git", "status"),
+                timeout=100,
+            ),
+            ("podman", "run", "--timeout", "100", "my-image", "git", "status"),
+        ),
+        (
+            Container(
+                image="my-image",
+                command=("git", "status"),
                 work_dir="/my-dir",
             ),
             ("podman", "run", "--workdir", "/my-dir", "my-image", "git", "status"),

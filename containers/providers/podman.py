@@ -106,6 +106,10 @@ class Podman(ContainerProvider):
         if container.remove:
             remove_args = ("--rm",)
 
+        timeout_args = tuple()
+        if container.timeout is not None:
+            timeout_args = ("--timeout", container.timeout)
+
         user_args = tuple()
         if container.user is not None:
             user_group = str(container.user)
@@ -142,6 +146,7 @@ class Podman(ContainerProvider):
             *interactive_args,
             *tty_args,
             *remove_args,
+            *timeout_args,
             *env_args,
             *user_args,
             *work_dir_args,
