@@ -108,7 +108,7 @@ class Podman(ContainerProvider):
 
         timeout_args = tuple()
         if container.timeout is not None:
-            timeout_args = ("--timeout", container.timeout)
+            timeout_args = ("--timeout", str(container.timeout))
 
         user_args = tuple()
         if container.user is not None:
