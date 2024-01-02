@@ -14,7 +14,12 @@ class ContainersService:
         self.provider = provider or Podman()
         self.logger = logging.getLogger(__name__)
 
-    async def load_image(self, image: str, always_pull: bool = False):
+    async def load_image(
+        self,
+        image: str,
+        always_pull: bool = False,
+        credentials: typing.Optional[typing.Tuple[str, str]] = None,
+    ):
         # TODO: abstract this to provider instead
         if not always_pull:
             command = (
@@ -38,9 +43,23 @@ class ContainersService:
             "pull",
             image,
         )
-        self.logger.debug("Pulling image %s with command %s", image, " ".join(command))
-        proc = await asyncio.create_subprocess_exec(
+        log_command = (
             *command,
+            *(("--creds", "<REDACTED>") if credentials is not None else tuple()),
+        )
+        self.logger.debug(
+            "Pulling image %s with command %s", image, " ".join(log_command)
+        )
+        full_command = (
+            *command,
+            *(
+                ("--creds", ":".join(credentials))
+                if credentials is not None
+                else tuple()
+            ),
+        )
+        proc = await asyncio.create_subprocess_exec(
+            *full_command,
             stdout=asyncio.subprocess.DEVNULL,
             stderr=asyncio.subprocess.PIPE,
         )
