@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "container-helpers"
-version = "0.0.8"
+version = "0.0.9"
 description = "Helpers for running docker or podman containers easily in Python"
 authors = ["Fang-Pen Lin <fangpen@launchplatform.com>"]
 license = "MIT"
