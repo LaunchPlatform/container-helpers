@@ -135,7 +135,8 @@ async def test_run_with_runtime_env(
     else:
         runtime_env = None
     async with containers.run(
-        container, runtime_env=runtime_env, log_level="debug"
+        container,
+        runtime_env=runtime_env,
     ) as proc:
         assert (await proc.wait()) == 0
 
