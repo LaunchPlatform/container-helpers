@@ -1,5 +1,6 @@
 import asyncio.subprocess
 import pathlib
+import tarfile
 
 import pytest
 
@@ -120,7 +121,7 @@ async def test_run_with_runtime_env(
         source=data_image,
         target="/data",
         archive_to=archive_target,
-        archive_method=".tar.gz",
+        archive_method="tar.gz",
         archive_success=archive_success,
         read_write=True,
     )
@@ -139,3 +140,12 @@ async def test_run_with_runtime_env(
         assert (await proc.wait()) == 0
 
     await asyncio.wait_for(poll_success_file(archive_success), 5)
+    with tarfile.open(archive_target) as tar:
+        if not disable_ovl_white_out:
+            device = tar.getmember("./bin/sh")
+            assert device.type == tarfile.CHRTYPE
+            assert device.devmajor == 0
+            assert device.devminor == 0
+        else:
+            whiteout = tar.getmember("./bin/.wh.sh")
+            assert whiteout.type == tarfile.REGTYPE
