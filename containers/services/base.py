@@ -10,8 +10,13 @@ from containers import Podman
 
 
 class ContainersService:
-    def __init__(self, provider: typing.Optional[ContainerProvider] = None):
+    def __init__(
+        self,
+        provider: typing.Optional[ContainerProvider] = None,
+        runtime_env: typing.Optional[dict] = None,
+    ):
         self.provider = provider or Podman()
+        self.runtime_env = runtime_env
         self.logger = logging.getLogger(__name__)
 
     async def load_image(
@@ -87,12 +92,15 @@ class ContainersService:
     ) -> typing.AsyncContextManager[asyncio.subprocess.Process]:
         command = self.provider.build_command(container, log_level=log_level)
         self.logger.info(
-            "Run container with command: %s", " ".join(map(shlex.quote, command))
+            "Run container with command: %s, runtime_env=%s",
+            " ".join(map(shlex.quote, command)),
+            self.runtime_env,
         )
         proc = await asyncio.create_subprocess_exec(
             *command,
             stdin=stdin,
             stdout=stdout,
             stderr=stderr,
+            env=self.runtime_env,
         )
         yield proc
