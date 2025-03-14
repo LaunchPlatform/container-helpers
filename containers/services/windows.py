@@ -77,17 +77,6 @@ class WindowsContainersService(ContainersService):
                 new_mounts.append(mount)
             yield new_mounts
 
-    def _filter_mount(self, mount: Mount) -> Mount:
-        if not isinstance(mount, ImageMount):
-            return mount
-        if mount.archive_to is None:
-            return mount
-        mount = copy.deepcopy(mount)
-        mount.archive_to = to_wsl_path(mount.archive_to)
-        if mount.archive_success is not None:
-            mount.archive_success = to_wsl_path(mount.archive_success)
-        return mount
-
     @contextlib.asynccontextmanager
     async def run(
         self,
