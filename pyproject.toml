@@ -1,21 +1,26 @@
-[tool.poetry]
+[project]
 name = "container-helpers"
-version = "0.0.9"
+version = "0.0.10"
 description = "Helpers for running docker or podman containers easily in Python"
-authors = ["Fang-Pen Lin <fangpen@launchplatform.com>"]
+authors = [{ name = "Fang-Pen Lin", email = "fangpen@launchplatform.com" }]
+requires-python = "~=3.9"
 license = "MIT"
-repository = "https://github.com/LaunchPlatform/container-helpers"
-packages = [{include = "containers"}]
 
-[tool.poetry.dependencies]
-python = "^3.9"
+[project.urls]
+Repository = "https://github.com/LaunchPlatform/container-helpers"
 
-[tool.poetry.dev-dependencies]
+[dependency-groups]
+dev = [
+    "pytest>=7.4.0,<8",
+    "pytest-asyncio>=0.21.0,<0.22",
+]
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^7.4.0"
-pytest-asyncio = "^0.21.0"
+[tool.hatch.build.targets.sdist]
+include = ["containers"]
+
+[tool.hatch.build.targets.wheel]
+include = ["containers"]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
