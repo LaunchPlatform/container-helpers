@@ -1,7 +1,8 @@
 # ref: https://github.com/containers/podman/blob/main/contrib/podmanimage/stable/Containerfile
-FROM python:3.11.4-alpine3.18
+FROM python:3.11.11-alpine3.21
 RUN apk update && apk add --no-cache \
-        fuse \
+        uv \
+        fuse3 \
         fuse-overlayfs \
         podman \
         s6-overlay \
@@ -23,9 +24,7 @@ RUN mkdir /project
 WORKDIR /project
 
 COPY . /project/
-RUN pip install poetry && \
-    poetry config virtualenvs.create false && \
-    poetry install --no-interaction --no-ansi
+RUN uv sync
 
 # Note VOLUME options must always happen after the chown call above
 # RUN commands can not modify existing volumes

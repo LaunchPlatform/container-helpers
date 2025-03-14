@@ -17,17 +17,18 @@ jobs:
           command: docker-compose run test
   build-and-publish:
     docker:
-      - image: cimg/python:3.10.11
+      - image: cimg/python:3.10.16
     steps:
       - checkout
-      - python/install-packages:
-          pkg-manager: poetry
+      - run:
+          name: Install uv
+          command: pip install uv
       - run:
           name: Build
-          command: poetry build
+          command: uv build
       - run:
           name: Publish
-          command: poetry publish
+          command: uv publish
 
 workflows:
   test:

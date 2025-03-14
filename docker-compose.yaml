@@ -6,7 +6,7 @@ services:
     - /bin/sh
     - "-c"
     - |
-      python -m pytest -svvv ./tests
+      uv run python -m pytest -svvv ./tests
     working_dir: /project
     privileged: true
     volumes:
