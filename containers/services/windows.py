@@ -77,6 +77,17 @@ class WindowsContainersService(ContainersService):
                 new_mounts.append(mount)
             yield new_mounts
 
+    def _filter_mount(self, mount: Mount) -> Mount:
+        if not isinstance(mount, ImageMount):
+            return mount
+        if mount.archive_to is None:
+            return mount
+        mount = copy.deepcopy(mount)
+        mount.archive_to = to_wsl_path(mount.archive_to)
+        if mount.archive_success is not None:
+            mount.archive_success = to_wsl_path(mount.archive_success)
+        return mount
+
     @contextlib.asynccontextmanager
     async def run(
         self,
@@ -84,6 +95,7 @@ class WindowsContainersService(ContainersService):
         stdin: typing.Optional[int] = None,
         stdout: typing.Optional[int] = None,
         stderr: typing.Optional[int] = None,
+        runtime_env: typing.Optional[dict] = None,
         log_level: typing.Optional[str] = None,
     ) -> typing.AsyncContextManager[asyncio.subprocess.Process]:
         container = copy.deepcopy(container)
@@ -112,5 +124,12 @@ class WindowsContainersService(ContainersService):
                 # ref: https://github.com/containers/podman/issues/14494
                 container.security_options.seccomp = to_wsl_path(temp_seccomp_profile)
             container.mounts = new_mounts
-            async with super().run(container, stdin, stdout, stderr, log_level) as proc:
+            async with super().run(
+                container=container,
+                stdin=stdin,
+                stdout=stdout,
+                stderr=stderr,
+                runtime_env=runtime_env,
+                log_level=log_level,
+            ) as proc:
                 yield proc
