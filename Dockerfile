@@ -20,6 +20,13 @@ RUN sed -e 's|^#mount_program|mount_program|g' \
            /usr/share/containers/storage.conf \
            > /etc/containers/storage.conf
 
+ADD https://github.com/LaunchPlatform/oci-hooks-archive-overlay/releases/download/2.0.4/archive_overlay /usr/bin/archive_overlay
+ADD https://github.com/LaunchPlatform/oci-hooks-mount-chown/releases/download/1.0.7/mount_chown /usr/bin/mount_chown
+RUN chmod +x /usr/bin/mount_chown && \
+    chmod +x /usr/bin/archive_overlay
+RUN mkdir -p /usr/share/containers/oci/hooks.d/
+COPY ./docker/containers/*.json /usr/share/containers/oci/hooks.d/
+
 RUN mkdir /project
 WORKDIR /project
 

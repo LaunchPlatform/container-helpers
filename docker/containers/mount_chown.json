@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "hook": {
+    "path": "/usr/bin/mount_chown"
+  },
+  "when": {
+    "annotations": {
+        "com\\.launchplatform\\.oci-hooks\\.mount-chown\\.([^.]+)\\.path": "(.+)"
+    }
+  },
+  "stages": ["createContainer"]
+}
