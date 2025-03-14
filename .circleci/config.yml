@@ -12,6 +12,7 @@ jobs:
       docker_layer_caching: true
     steps:
       - checkout
+      - run: docker volume prune -f
       - run:
           name: Run test
           command: docker-compose run test
