@@ -8,6 +8,10 @@ from containers import Container
 from containers import ContainerProvider
 from containers import Podman
 
+# ref: https://github.com/python/cpython/blob/4e08a9f97a172aa47fbed661c3cb8a9d36d43931/Lib/asyncio/streams.py#L23
+# the default used in CPython's stream implementation
+DEFAULT_LIMIT = 2**16  # 64 KiB
+
 
 class ContainersService:
     def __init__(
@@ -87,6 +91,7 @@ class ContainersService:
         stdout: typing.Optional[int] = None,
         stderr: typing.Optional[int] = None,
         runtime_env: typing.Optional[dict] = None,
+        limit: int = DEFAULT_LIMIT,
         log_level: typing.Optional[str] = None,
     ) -> typing.AsyncContextManager[asyncio.subprocess.Process]:
         command = self.provider.build_command(container, log_level=log_level)
@@ -101,5 +106,6 @@ class ContainersService:
             stdout=stdout,
             stderr=stderr,
             env=runtime_env,
+            limit=limit,
         )
         yield proc

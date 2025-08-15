@@ -150,3 +150,24 @@ async def test_run_with_runtime_env(
         else:
             whiteout = tar.getmember("./bin/.wh.sh")
             assert whiteout.type == tarfile.REGTYPE
+
+
+@pytest.mark.asyncio
+async def test_run_with_limit(containers: ContainersService):
+    def print_n_char_line(n: int):
+        return ("python", "-c", f"print('x'*{n})")
+
+    container = Container(command=print_n_char_line(17), image="python:3.11")
+    async with containers.run(
+        container, stdout=asyncio.subprocess.PIPE, limit=16
+    ) as proc:
+        with pytest.raises(
+            ValueError, match="Separator is found, but chunk is longer than limit"
+        ):
+            await proc.stdout.readline()
+
+    async with containers.run(
+        container, stdout=asyncio.subprocess.PIPE, limit=17
+    ) as proc:
+        line = await proc.stdout.readline()
+        assert line == b"x" * 17 + b"\n"

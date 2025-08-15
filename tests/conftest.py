@@ -13,6 +13,7 @@ from containers import Mount
 from containers import Podman as _Podman
 from containers import WindowsContainersService as _WindowsContainersService
 from containers.data_types import PathType
+from containers.services.base import DEFAULT_LIMIT
 from containers.services.windows import to_wsl_path
 
 ARCHIVE_HOOK_PREFIX = "com.launchplatform.oci-hooks.archive-overlay."
@@ -112,6 +113,7 @@ class WindowsContainersService(_WindowsContainersService):
         stdout: typing.Optional[int] = None,
         stderr: typing.Optional[int] = None,
         runtime_env: typing.Optional[dict] = None,
+        limit: int = DEFAULT_LIMIT,
         log_level: typing.Optional[str] = None,
     ) -> typing.AsyncContextManager[asyncio.subprocess.Process]:
         container = copy.deepcopy(container)
@@ -121,6 +123,7 @@ class WindowsContainersService(_WindowsContainersService):
             stdin=stdin,
             stdout=stdout,
             stderr=stderr,
+            limit=limit,
             log_level=log_level,
         )
 

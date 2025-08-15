@@ -11,6 +11,7 @@ from ..data_types import Container
 from ..data_types import Mount
 from ..data_types import PathType
 from .base import ContainersService
+from .base import DEFAULT_LIMIT
 
 
 def to_wsl_path(path: pathlib.Path):
@@ -85,6 +86,7 @@ class WindowsContainersService(ContainersService):
         stdout: typing.Optional[int] = None,
         stderr: typing.Optional[int] = None,
         runtime_env: typing.Optional[dict] = None,
+        limit: int = DEFAULT_LIMIT,
         log_level: typing.Optional[str] = None,
     ) -> typing.AsyncContextManager[asyncio.subprocess.Process]:
         container = copy.deepcopy(container)
@@ -119,6 +121,7 @@ class WindowsContainersService(ContainersService):
                 stdout=stdout,
                 stderr=stderr,
                 runtime_env=runtime_env,
+                limit=limit,
                 log_level=log_level,
             ) as proc:
                 yield proc
