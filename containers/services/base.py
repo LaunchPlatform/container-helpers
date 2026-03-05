@@ -6,6 +6,7 @@ import typing
 
 from containers import Container
 from containers import ContainerProvider
+from containers import LoadImageError
 from containers import Podman
 
 # ref: https://github.com/python/cpython/blob/4e08a9f97a172aa47fbed661c3cb8a9d36d43931/Lib/asyncio/streams.py#L23
@@ -74,13 +75,14 @@ class ContainersService:
         stderr_content = await stderr.read()
         code = await proc.wait()
         if code != 0:
+            stderr_text = stderr_content.decode(errors="replace")
             self.logger.error(
                 "Failed to load image %s with code=%s, stderr=%s",
                 image,
                 code,
                 stderr_content,
             )
-            raise RuntimeError(f"Failed to load image {image} with code {code}")
+            raise LoadImageError(image, code, stderr_text)
         self.logger.info("Image %s loaded", image)
 
     @contextlib.asynccontextmanager
