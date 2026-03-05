@@ -13,7 +13,7 @@ wheels = [
 
 [[package]]
 name = "container-helpers"
-version = "0.0.12"
+version = "0.0.13"
 source = { editable = "." }
 
 [package.dev-dependencies]
