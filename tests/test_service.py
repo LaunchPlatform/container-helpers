@@ -1,6 +1,7 @@
 import asyncio.subprocess
 import pathlib
 import tarfile
+import uuid
 
 import pytest
 
@@ -8,6 +9,7 @@ from .conftest import ImageMount
 from containers import BindMount
 from containers import Container
 from containers import ContainersService
+from containers import LoadImageError
 
 
 async def poll_success_file(target_file: pathlib.Path):
@@ -18,6 +20,18 @@ async def poll_success_file(target_file: pathlib.Path):
 @pytest.mark.asyncio
 async def test_load_image(containers: ContainersService):
     await containers.load_image("alpine")
+
+
+@pytest.mark.asyncio
+async def test_load_image_error(containers: ContainersService):
+    image = f"{uuid.uuid4().hex}:tag"
+    with pytest.raises(LoadImageError) as exc_info:
+        await containers.load_image(image, always_pull=True)
+
+    err = exc_info.value
+    assert err.image == image
+    assert err.code != 0
+    assert err.stderr
 
 
 @pytest.mark.asyncio
