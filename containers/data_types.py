@@ -50,5 +50,6 @@ class Container:
     user: typing.Optional[str] = None
     group: typing.Optional[str] = None
     network: typing.Optional[str] = None
+    shm_size: typing.Optional[str] = None
     timeout: typing.Optional[int] = None
     security_options: typing.Optional[SecurityOptions] = None

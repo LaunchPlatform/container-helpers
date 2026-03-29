@@ -125,6 +125,10 @@ class Podman(ContainerProvider):
         if container.network is not None:
             network_args = ("--network", container.network)
 
+        shm_size_args = tuple()
+        if container.shm_size is not None:
+            shm_size_args = ("--shm-size", str(container.shm_size))
+
         security_options_args = tuple()
         if container.security_options is not None:
             security_options_args = self.make_security_options(
@@ -151,6 +155,7 @@ class Podman(ContainerProvider):
             *user_args,
             *work_dir_args,
             *network_args,
+            *shm_size_args,
             *security_options_args,
             *mount_args,
             container.image,

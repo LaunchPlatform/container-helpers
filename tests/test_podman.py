@@ -98,6 +98,14 @@ def test_bind_mount_args(
             Container(
                 image="my-image",
                 command=("git", "status"),
+                shm_size="256m",
+            ),
+            ("podman", "run", "--shm-size", "256m", "my-image", "git", "status"),
+        ),
+        (
+            Container(
+                image="my-image",
+                command=("git", "status"),
                 interactive=True,
             ),
             ("podman", "run", "--interactive", "my-image", "git", "status"),
